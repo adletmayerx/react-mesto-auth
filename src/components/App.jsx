@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './Header/Header';
 import Main from './Main/Main';
 import Footer from './Footer/Footer';
+import Login from "./Login/Login";
 import PopupEditAvatar from './PopupEditAvatar/PopupEditAvatar';
 import PopupEditProfile from './PopupEditProfile/PopupEditProfile';
 import PopupAddPlace from './PopupAddPlace/PopupAddPlace';
@@ -175,7 +176,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
-      <Main
+      {/* <Main
         onEditAvatar={handleEditAvatarClick}
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
@@ -184,8 +185,10 @@ function App() {
         cards={cards}
         onCardLike={handleCardLike}
         onCardDelete={handleCardDelete}
-      />
-      <Footer />
+      /> */}
+      <Login />
+
+      {/* <Footer /> */}
 
       <PopupEditAvatar
         isOpen={isEditAvatarPopupOpen}
