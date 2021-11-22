@@ -1,4 +1,6 @@
 .register__title {
+  margin: 0;
+  padding: 0;
   font-family: Inter;
   font-style: normal;
   font-weight: 900;

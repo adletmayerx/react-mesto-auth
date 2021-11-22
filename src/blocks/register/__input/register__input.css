@@ -3,11 +3,16 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;
+  border: none;
   border-bottom: 2px solid #CCC;
-  padding-bottom: 15px;
+  padding-bottom: 13px;
+  box-sizing: border-box;
+  background-color: transparent;
+  color: #FFF;
+  height: 27px;
 }
 
-.register__input::placeholder{
+.register__input::placeholder {
   font-weight: 500;
   font-size: 14px;
   line-height: 17px;

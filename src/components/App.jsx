@@ -3,6 +3,7 @@ import Header from './Header/Header';
 import Main from './Main/Main';
 import Footer from './Footer/Footer';
 import Login from "./Login/Login";
+import Register from "./Register/Register";
 import PopupEditAvatar from './PopupEditAvatar/PopupEditAvatar';
 import PopupEditProfile from './PopupEditProfile/PopupEditProfile';
 import PopupAddPlace from './PopupAddPlace/PopupAddPlace';
@@ -186,7 +187,9 @@ function App() {
         onCardLike={handleCardLike}
         onCardDelete={handleCardDelete}
       /> */}
-      <Login />
+      {/* <Login /> */}
+
+      <Register />
 
       {/* <Footer /> */}
 
