@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Login() {
+export default function Login({ handleSubmit }) {
   return (
     <div className="login">
       <h2 className="title login__title">Вход</h2>
