@@ -5,7 +5,7 @@ import HeaderInfo from '../HeaderInfo/HeaderInfo';
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
 
-export default function Header({ headerEmail, signOut }) {
+export default function Header({ headerEmail, signOut, loggedIn }) {
   return (
     <header className="header">
       <img src={logo} alt="лого сайта 'Место'" className="header__logo" />

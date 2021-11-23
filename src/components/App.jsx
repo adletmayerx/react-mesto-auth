@@ -1,54 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import Header from './Header/Header';
-import Main from './Main/Main';
-import Footer from './Footer/Footer';
+import React, { useState, useEffect } from "react";
+import Header from "./Header/Header";
+import Main from "./Main/Main";
+import Footer from "./Footer/Footer";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
-import PopupEditAvatar from './PopupEditAvatar/PopupEditAvatar';
-import PopupEditProfile from './PopupEditProfile/PopupEditProfile';
-import PopupAddPlace from './PopupAddPlace/PopupAddPlace';
-import PopupDeleteConfirm from './PopupDeleteConfirm/PopupDeleteConfirm';
-import ImagePopup from './PopupImage/PopupImage';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import { api } from '../utils/api';
+import PopupEditAvatar from "./PopupEditAvatar/PopupEditAvatar";
+import PopupEditProfile from "./PopupEditProfile/PopupEditProfile";
+import PopupAddPlace from "./PopupAddPlace/PopupAddPlace";
+import PopupDeleteConfirm from "./PopupDeleteConfirm/PopupDeleteConfirm";
+import ImagePopup from "./PopupImage/PopupImage";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { api } from "../utils/api";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
+import PopupSuccess from "./PopupSuccess/PopupSuccess";
+import PopupFail from "./PopupFail/PopupFail";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import * as auth from "../utils/auth.js";
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] = useState(false);
+  const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] =
+    useState(false);
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectCard] = useState({});
-  const [currentUser, setCurrentUser] = useState({name: '', about: ''});
-  const [deletingCardId, setDeletingCardId] = useState('');
-  const [buttonAvatarText, setButtonAvatarText] = useState('Сохранить');
-  const [buttonProfileText, setButtonProfileText] = useState('Сохранить');
-  const [buttonAddPlaceText, setButtonAddPlaceText] = useState('Создать');
-  const [buttonDeleteText, setButtonDeleteText] = useState('Да');
+  const [currentUser, setCurrentUser] = useState({ name: "", about: "" });
+  const [deletingCardId, setDeletingCardId] = useState("");
+  const [buttonAvatarText, setButtonAvatarText] = useState("Сохранить");
+  const [buttonProfileText, setButtonProfileText] = useState("Сохранить");
+  const [buttonAddPlaceText, setButtonAddPlaceText] = useState("Создать");
+  const [buttonDeleteText, setButtonDeleteText] = useState("Да");
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
 
+  let navigate = useNavigate();
 
   useEffect(() => {
-    api.getInitialCards()
-      .then(initialCards => {
+    api
+      .getInitialCards()
+      .then((initialCards) => {
         setCards(initialCards);
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
-    
+
         return [];
       });
   }, []);
 
+  useEffect(() => {
+    api
+      .getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((err) => {
+        console.log(err);
 
+        return [];
+      });
+  }, []);
 
   useEffect(() => {
-    api.getUserInfo().then(res => {
-      setCurrentUser(res);
-    }).catch((err) => {
-      console.log(err);
-  
-      return [];
-    });
-  }, []);
+    if (localStorage.getItem("jwt")) {
+      auth.checkToken(localStorage.getItem("jwt")).then(() => {
+        navigate("/");
+      });
+    }
+  }, [navigate]);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -68,7 +88,7 @@ function App() {
   };
 
   const handleCardClick = (url, title) => {
-    setSelectCard({url, title});
+    setSelectCard({ url, title });
   };
 
   const closeAllPopups = () => {
@@ -81,7 +101,7 @@ function App() {
   };
 
   const handleUpdateUser = (name, about) => {
-    setButtonProfileText('Сохранение...');
+    setButtonProfileText("Сохранение...");
     api
       .editProfile(name, about)
       .then((res) => setCurrentUser(res))
@@ -94,10 +114,10 @@ function App() {
 
         return [];
       });
-  }
+  };
 
   const handleUpdateAvatar = (avatar) => {
-    setButtonAvatarText('Сохранение...');
+    setButtonAvatarText("Сохранение...");
     api
       .editAvatar(avatar)
       .then((res) => setCurrentUser(res))
@@ -110,10 +130,10 @@ function App() {
 
         return [];
       });
-  }
+  };
 
   const handleAddPlaceSubmit = (name, link) => {
-    setButtonAddPlaceText('Сохранение...');
+    setButtonAddPlaceText("Сохранение...");
     api
       .addCard(name, link)
       .then((newCard) => setCards([newCard, ...cards]))
@@ -126,10 +146,10 @@ function App() {
 
         return [];
       });
-  }
-  
+  };
+
   const handleCardDelete = () => {
-    setButtonDeleteText('Удаление...');
+    setButtonDeleteText("Удаление...");
     api
       .deleteCard(deletingCardId)
       .then(() => {
@@ -144,11 +164,11 @@ function App() {
 
         return [];
       });
-  }
+  };
 
-  const handleCardLike = (likes, id) =>  {
-    const isLiked = likes.some(i => i._id === currentUser._id);
-    
+  const handleCardLike = (likes, id) => {
+    const isLiked = likes.some((i) => i._id === currentUser._id);
+
     if (isLiked) {
       api
         .removeLike(id)
@@ -172,29 +192,71 @@ function App() {
           return [];
         });
     }
-}
-  const signOut = () => {
-    console.log("signed out");
   };
-  
+
+  const handleSignOut = () => {
+    setLoggedIn(false);
+    localStorage.removeItem("jwt");
+  };
+
+  const handleSignIn = (email, password) => {
+    auth.authorize(email, password).then(() => {
+      setLoggedIn(true);
+      setCurrentUserEmail(email);
+      navigate('/');
+    });
+  };
+  const handleSignUp = (email, password) => {
+    auth
+      .register(email, password)
+      .then((res) => {
+        if (res.statusCode !== 400) {
+          navigate("/sign-in");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+
+        return [];
+      });
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header headerEmail="test123@test.com" signOut={signOut}/>
-      {/* <Main
-        onEditAvatar={handleEditAvatarClick}
-        onEditProfile={handleEditProfileClick}
-        onAddPlace={handleAddPlaceClick}
-        onCardClick={handleCardClick}
-        onRemoveButtonClick={handleRemoveButtonClick}
-        cards={cards}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
-      /> */}
-      {/* <Login /> */}
+      <Header
+        headerEmail={currentUserEmail}
+        signOut={handleSignOut}
+        loggedIn={loggedIn}
+      />
 
-      <Register />
+      <Routes>
+        <Route
+          exact
+          path="/sign-in"
+          element={<Login handleSignIn={handleSignIn} />}
+        ></Route>
 
-      {/* <Footer /> */}
+        <Route
+          exact
+          path="/sign-up"
+          element={<Register handleSignUp={handleSignUp} />}
+        ></Route>
+      </Routes>
+
+      <ProtectedRoute path="/" loggedIn={loggedIn}>
+        <Main
+          onEditAvatar={handleEditAvatarClick}
+          onEditProfile={handleEditProfileClick}
+          onAddPlace={handleAddPlaceClick}
+          onCardClick={handleCardClick}
+          onRemoveButtonClick={handleRemoveButtonClick}
+          cards={cards}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+        />
+      </ProtectedRoute>
+
+      <Footer />
 
       <PopupEditAvatar
         isOpen={isEditAvatarPopupOpen}
@@ -229,6 +291,9 @@ function App() {
         onDelete={handleCardDelete}
         buttonText={buttonDeleteText}
       />
+
+      <PopupSuccess />
+      <PopupFail />
     </CurrentUserContext.Provider>
   );
 }
