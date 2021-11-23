@@ -173,10 +173,13 @@ function App() {
         });
     }
 }
+  const signOut = () => {
+    console.log("signed out");
+  };
   
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <Header />
+      <Header headerEmail="test123@test.com" signOut={signOut}/>
       {/* <Main
         onEditAvatar={handleEditAvatarClick}
         onEditProfile={handleEditProfileClick}

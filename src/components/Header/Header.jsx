@@ -1,40 +1,18 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route} from 'react-router-dom';
 import logo from '../../images/logo.svg'
+import HeaderInfo from '../HeaderInfo/HeaderInfo';
+import SignIn from '../SignIn/SignIn';
+import SignUp from '../SignUp/SignUp';
 
 export default function Header({ headerEmail, signOut }) {
   return (
     <header className="header">
       <img src={logo} alt="лого сайта 'Место'" className="header__logo" />
       <Routes>
-        <Route exact path="/">
-          <>
-            <div className="header__info">
-              <p className="header__email">{headerEmail}</p>
-              <Link to="/sign-in" className="header__sign-up" onClick={signOut}>
-                Выйти
-              </Link>
-            </div>
-          </>
-        </Route>
-        <Route exact path="/sign-up">
-          <>
-            <div className="header__sign">
-              <Link to="sign-in" className="header__sign-up">
-                Войти
-              </Link>
-            </div>
-          </>
-        </Route>
-        <Route path="/sign-in">
-          <>
-            <div className="header__sign">
-              <Link to="sign-up" className="header__sign-up">
-                Регистрация
-              </Link>
-            </div>
-          </>
-        </Route>
+        <Route exact path="/" element={<HeaderInfo headerEmail={headerEmail} signOut={signOut} />} />
+        <Route exact path="/sign-up" element={<SignIn />} />
+        <Route exact path="/sign-in" element={<SignUp />} />
       </Routes>
     </header>
   );
