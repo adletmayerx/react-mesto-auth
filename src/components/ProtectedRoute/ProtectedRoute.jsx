@@ -1,23 +1,10 @@
-import React from 'react';
-import { Route, Navigate, Routes } from "react-router-dom";
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ element: Component, ...props }) => {
+export default function ProtectedRoute({ component: Component, ...props }) {
   return (
-    <Routes>
-      <Route>
-        {() => {
-          console.log(props.loggedIn);
-          props.loggedIn ? (
-            <Component {...props} />
-          ) : (
-            <Navigate to="/sign-in" />
-          );
-        }
-        }
-        ;
-      </Route>
-    </Routes>
-  );
+    props.loggedIn ? <Component {...props} /> : <p>not logged</p> );
 };
 
-export default ProtectedRoute;
+
+{/* <Navigate to="/sign-in" /> */}

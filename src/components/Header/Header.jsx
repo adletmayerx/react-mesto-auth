@@ -10,7 +10,7 @@ export default function Header({ headerEmail, signOut, loggedIn }) {
     <header className="header">
       <img src={logo} alt="лого сайта 'Место'" className="header__logo" />
       <Routes>
-        <Route exact path="/" element={<HeaderInfo headerEmail={headerEmail} signOut={signOut} />} />
+        {loggedIn && <Route exact path="/" element={<HeaderInfo headerEmail={headerEmail} signOut={signOut} />} />}
         <Route exact path="/sign-up" element={<SignIn />} />
         <Route exact path="/sign-in" element={<SignUp />} />
       </Routes>

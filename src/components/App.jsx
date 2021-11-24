@@ -63,8 +63,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log(localStorage.getItem("jwt"));
     if (localStorage.getItem("jwt")) {
       auth.checkToken(localStorage.getItem("jwt")).then(() => {
+        setLoggedIn(true);
         navigate("/");
       });
     }
@@ -197,13 +199,16 @@ function App() {
   const handleSignOut = () => {
     setLoggedIn(false);
     localStorage.removeItem("jwt");
+    setCurrentUserEmail("");
   };
 
   const handleSignIn = (email, password) => {
-    auth.authorize(email, password).then(() => {
+    auth.authorize(email, password).then((res) => {
+      console.log(res);
       setLoggedIn(true);
       setCurrentUserEmail(email);
-      navigate('/');
+      navigate("/");
+      localStorage.setItem("jwt", res.token);
     });
   };
   const handleSignUp = (email, password) => {
@@ -241,20 +246,27 @@ function App() {
           path="/sign-up"
           element={<Register handleSignUp={handleSignUp} />}
         ></Route>
+
+        <Route
+          exact
+          path="/"
+          element={
+            <ProtectedRoute
+              loggedIn={loggedIn}
+              component={Main}
+              onEditAvatar={handleEditAvatarClick}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onCardClick={handleCardClick}
+              onRemoveButtonClick={handleRemoveButtonClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />
+          }
+        />
       </Routes>
 
-      <ProtectedRoute path="/" loggedIn={loggedIn}>
-        <Main
-          onEditAvatar={handleEditAvatarClick}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onCardClick={handleCardClick}
-          onRemoveButtonClick={handleRemoveButtonClick}
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        />
-      </ProtectedRoute>
 
       <Footer />
 
