@@ -2,8 +2,8 @@ import React from 'react';
 import { Routes, Route} from 'react-router-dom';
 import logo from '../../images/logo.svg'
 import HeaderInfo from '../HeaderInfo/HeaderInfo';
-import SignIn from '../SignIn/SignIn';
-import SignUp from '../SignUp/SignUp';
+import LoginHeader from '../LoginHeader/LoginHeader';
+import RegisterHeader from '../RegisterHeader/RegisterHeader';
 
 export default function Header({ headerEmail, signOut, loggedIn }) {
   return (
@@ -11,8 +11,8 @@ export default function Header({ headerEmail, signOut, loggedIn }) {
       <img src={logo} alt="лого сайта 'Место'" className="header__logo" />
       <Routes>
         {loggedIn && <Route exact path="/react-mesto-auth" element={<HeaderInfo headerEmail={headerEmail} signOut={signOut} />} />}
-        <Route exact path="react-mesto-auth/sign-up" element={<SignIn />} />
-        <Route exact path="react-mesto-auth/sign-in" element={<SignUp />} />
+        <Route exact path="react-mesto-auth/sign-up" element={<LoginHeader />} />
+        <Route exact path="react-mesto-auth/sign-in" element={<RegisterHeader />} />
       </Routes>
     </header>
   );

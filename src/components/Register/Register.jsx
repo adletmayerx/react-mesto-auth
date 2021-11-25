@@ -50,7 +50,7 @@ export default function Register({ handleSignUp }) {
           Зарегистрироваться
         </button>
       </form>
-      <Link to="/sign-up" className="link register__tip">
+      <Link to="/react-mesto-auth/sign-in" className="link register__tip">
         Уже зарегистрированы? Войти
       </Link>
     </div>

@@ -36,7 +36,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState("");
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -70,8 +70,11 @@ function App() {
     setSelectCard({});
   };
 
-  const handleEscClick = (e) => {
-    if (e.key === "Escape") {
+  const handlePopupClosing = (e) => {
+    if (
+      e.target.classList.contains("popup") ||
+      e.target.classList.contains("popup__close-button")
+    ) {
       closeAllPopups();
     }
   };
@@ -99,13 +102,13 @@ function App() {
       .then((res) => setCurrentUser(res))
       .then(() => {
         closeAllPopups();
-        setButtonAvatarText("Сохранить");
       })
       .catch((err) => {
         console.log(err);
 
         return [];
-      });
+      })
+      .finally(() => setButtonAvatarText("Сохранить"));
   };
 
   const handleAddPlaceSubmit = (name, link) => {
@@ -115,13 +118,13 @@ function App() {
       .then((newCard) => setCards([newCard, ...cards]))
       .then(() => {
         closeAllPopups();
-        setButtonAddPlaceText("Создать");
       })
       .catch((err) => {
         console.log(err);
 
         return [];
-      });
+      })
+      .finally(() => setButtonAddPlaceText("Создать"));
   };
 
   const handleCardDelete = () => {
@@ -133,13 +136,13 @@ function App() {
       })
       .then(() => {
         closeAllPopups();
-        setButtonDeleteText("Да");
       })
       .catch((err) => {
         console.log(err);
 
         return [];
-      });
+      })
+      .finally(() => setButtonDeleteText("Да"));
   };
 
   const handleCardLike = (likes, id) => {
@@ -192,6 +195,7 @@ function App() {
         return [];
       });
   };
+
   const handleSignUp = (email, password) => {
     auth
       .register(email, password)
@@ -241,9 +245,10 @@ function App() {
     if (localStorage.getItem("jwt")) {
       auth
         .checkToken(localStorage.getItem("jwt"))
-        .then(() => {
+        .then((data) => {
           setLoggedIn(true);
           navigate("/react-mesto-auth");
+          setCurrentUserEmail(data.data.email);
         })
         .catch((err) => {
           console.log(err);
@@ -251,12 +256,18 @@ function App() {
           return [];
         });
     }
-  }, [navigate]);
+  }, [navigate, currentUserEmail]);
 
   useEffect(() => {
+    const handleEscClick = (e) => {
+      if (e.key === "Escape") {
+        closeAllPopups();
+      }
+    };
+
     document.addEventListener("keydown", handleEscClick);
     return () => {
-      document.removeEventListener("keydown, handleEscClick");
+      document.removeEventListener("keydown", handleEscClick);
     };
   }, []);
 
@@ -305,48 +316,40 @@ function App() {
 
       <PopupEditAvatar
         isOpen={isEditAvatarPopupOpen}
-        onClose={closeAllPopups}
+        onClose={handlePopupClosing}
         onUpdateAvatar={handleUpdateAvatar}
         buttonText={buttonAvatarText}
       />
 
       <PopupEditProfile
         isOpen={isEditProfilePopupOpen}
-        onClose={closeAllPopups}
+        onClose={handlePopupClosing}
         onUpdateUser={handleUpdateUser}
         buttonText={buttonProfileText}
       />
 
       <PopupAddPlace
         isOpen={isAddPlacePopupOpen}
-        onClose={closeAllPopups}
+        onClose={handlePopupClosing}
         onAddPlace={handleAddPlaceSubmit}
         buttonText={buttonAddPlaceText}
       />
 
       <ImagePopup
-        onClose={closeAllPopups}
+        onClose={handlePopupClosing}
         url={selectedCard.url}
         title={selectedCard.title}
       />
 
       <PopupDeleteConfirm
         isOpen={isDeleteConfirmPopupOpen}
-        onClose={closeAllPopups}
+        onClose={handlePopupClosing}
         onDelete={handleCardDelete}
         buttonText={buttonDeleteText}
       />
 
-      <PopupSuccess
-        isOpen={isSuccessPopupOpen}
-        onClose={closeAllPopups}
-        onEscClick={handleEscClick}
-      />
-      <PopupFail
-        isOpen={isFailPopupOpen}
-        onClose={closeAllPopups}
-        onEscClick={handleEscClick}
-      />
+      <PopupSuccess isOpen={isSuccessPopupOpen} onClose={handlePopupClosing} />
+      <PopupFail isOpen={isFailPopupOpen} onClose={handlePopupClosing} />
     </CurrentUserContext.Provider>
   );
 }
