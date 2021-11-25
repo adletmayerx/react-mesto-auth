@@ -12,6 +12,7 @@ export default function PopupInfo({
       className={`popup popup-info popup-info__${popupType} ${
         isOpen && "popup_opened"
       }`}
+
     >
       <div className="popup__container popup-info__container">
         <button

@@ -38,48 +38,6 @@ function App() {
 
   let navigate = useNavigate();
 
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((initialCards) => {
-        setCards(initialCards);
-      })
-      .catch((err) => {
-        console.log(err);
-
-        return [];
-      });
-  }, []);
-
-  useEffect(() => {
-    api
-      .getUserInfo()
-      .then((res) => {
-        setCurrentUser(res);
-      })
-      .catch((err) => {
-        console.log(err);
-
-        return [];
-      });
-  }, []);
-
-  useEffect(() => {
-    if (localStorage.getItem("jwt")) {
-      auth
-        .checkToken(localStorage.getItem("jwt"))
-        .then(() => {
-          setLoggedIn(true);
-          navigate("/react-mesto-auth");
-        })
-        .catch((err) => {
-          console.log(err);
-
-          return [];
-        });
-    }
-  }, [navigate]);
-
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
   };
@@ -110,6 +68,12 @@ function App() {
     setIsSuccessPopupOpen(false);
 
     setSelectCard({});
+  };
+
+  const handleEscClick = (e) => {
+    if (e.key === "Escape") {
+      closeAllPopups();
+    }
   };
 
   const handleUpdateUser = (name, about) => {
@@ -207,7 +171,6 @@ function App() {
   };
 
   const handleSignOut = () => {
-    debugger;
     setLoggedIn(false);
     localStorage.removeItem("jwt");
     setCurrentUserEmail("");
@@ -241,12 +204,61 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
-        
+
         setIsFailPopupOpen(true);
 
         return [];
       });
   };
+
+  useEffect(() => {
+    api
+      .getInitialCards()
+      .then((initialCards) => {
+        setCards(initialCards);
+      })
+      .catch((err) => {
+        console.log(err);
+
+        return [];
+      });
+  }, []);
+
+  useEffect(() => {
+    api
+      .getUserInfo()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch((err) => {
+        console.log(err);
+
+        return [];
+      });
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("jwt")) {
+      auth
+        .checkToken(localStorage.getItem("jwt"))
+        .then(() => {
+          setLoggedIn(true);
+          navigate("/react-mesto-auth");
+        })
+        .catch((err) => {
+          console.log(err);
+
+          return [];
+        });
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscClick);
+    return () => {
+      document.removeEventListener("keydown, handleEscClick");
+    };
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -325,8 +337,16 @@ function App() {
         buttonText={buttonDeleteText}
       />
 
-      <PopupSuccess isOpen={isSuccessPopupOpen} onClose={closeAllPopups} />
-      <PopupFail isOpen={isFailPopupOpen} onClose={closeAllPopups} />
+      <PopupSuccess
+        isOpen={isSuccessPopupOpen}
+        onClose={closeAllPopups}
+        onEscClick={handleEscClick}
+      />
+      <PopupFail
+        isOpen={isFailPopupOpen}
+        onClose={closeAllPopups}
+        onEscClick={handleEscClick}
+      />
     </CurrentUserContext.Provider>
   );
 }

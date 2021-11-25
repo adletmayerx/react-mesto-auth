@@ -1,7 +1,6 @@
 import React from "react";
 import PopupInfo from "../PopupInfo/PopupInfo";
-import infoImage from '../../images/popupInfoImage_fail.png'
-
+import infoImage from "../../images/popupInfoImage_fail.png";
 
 export default function PopupFail({ isOpen, onClose }) {
   return (
