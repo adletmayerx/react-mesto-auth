@@ -23,6 +23,8 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isDeleteConfirmPopupOpen, setIsDeleteConfirmPopupOpen] =
     useState(false);
+  const [isFailPopupOpen, setIsFailPopupOpen] = useState(false);
+  const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectCard] = useState({});
   const [currentUser, setCurrentUser] = useState({ name: "", about: "" });
@@ -63,12 +65,18 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log(localStorage.getItem("jwt"));
     if (localStorage.getItem("jwt")) {
-      auth.checkToken(localStorage.getItem("jwt")).then(() => {
-        setLoggedIn(true);
-        navigate("/");
-      });
+      auth
+        .checkToken(localStorage.getItem("jwt"))
+        .then(() => {
+          setLoggedIn(true);
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+
+          return [];
+        });
     }
   }, [navigate]);
 
@@ -98,6 +106,8 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsDeleteConfirmPopupOpen(false);
+    setIsFailPopupOpen(false);
+    setIsSuccessPopupOpen(false);
 
     setSelectCard({});
   };
@@ -200,27 +210,38 @@ function App() {
     setLoggedIn(false);
     localStorage.removeItem("jwt");
     setCurrentUserEmail("");
+    navigate("sign-in");
   };
 
   const handleSignIn = (email, password) => {
-    auth.authorize(email, password).then((res) => {
-      console.log(res);
-      setLoggedIn(true);
-      setCurrentUserEmail(email);
-      navigate("/");
-      localStorage.setItem("jwt", res.token);
-    });
+    auth
+      .authorize(email, password)
+      .then((res) => {
+        setLoggedIn(true);
+        setCurrentUserEmail(email);
+        navigate("/");
+        localStorage.setItem("jwt", res.token);
+      })
+      .catch((err) => {
+        console.log(err);
+
+        return [];
+      });
   };
   const handleSignUp = (email, password) => {
     auth
       .register(email, password)
       .then((res) => {
         if (res.statusCode !== 400) {
+          setIsSuccessPopupOpen(true);
+
           navigate("/sign-in");
         }
       })
       .catch((err) => {
         console.log(err);
+        
+        setIsFailPopupOpen(true);
 
         return [];
       });
@@ -267,7 +288,6 @@ function App() {
         />
       </Routes>
 
-
       <Footer />
 
       <PopupEditAvatar
@@ -304,8 +324,8 @@ function App() {
         buttonText={buttonDeleteText}
       />
 
-      <PopupSuccess />
-      <PopupFail />
+      <PopupSuccess isOpen={isSuccessPopupOpen} onClose={closeAllPopups} />
+      <PopupFail isOpen={isFailPopupOpen} onClose={closeAllPopups} />
     </CurrentUserContext.Provider>
   );
 }

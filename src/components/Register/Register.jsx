@@ -15,7 +15,7 @@ export default function Register({ handleSignUp }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email  || password) {
+    if (email || password) {
       handleSignUp(email, password);
     }
   };
@@ -23,7 +23,7 @@ export default function Register({ handleSignUp }) {
   return (
     <div className="register">
       <h2 className="title register__title">Регистрация</h2>
-      <form name="register" className="form register__form">
+      <form name="register" className="form register__form" onSubmit={handleSubmit}>
         <input
           name="email"
           type="email"
@@ -31,6 +31,7 @@ export default function Register({ handleSignUp }) {
           placeholder="Email"
           value={email}
           onChange={handleChangeEmail}
+          required
         />
         <input
           name="password"
@@ -39,11 +40,12 @@ export default function Register({ handleSignUp }) {
           placeholder="Пароль"
           value={password}
           onChange={handleChangePassword}
+          required
+
         />
         <button
           type="submit"
           className="register__submit-button form__submit"
-          onClick={handleSubmit}
         >
           Зарегистрироваться
         </button>

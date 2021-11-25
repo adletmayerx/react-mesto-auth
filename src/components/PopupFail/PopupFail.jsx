@@ -1,12 +1,16 @@
 import React from "react";
 import PopupInfo from "../PopupInfo/PopupInfo";
+import infoImage from '../../images/popupInfoImage_fail.png'
 
-export default function PopupFail() {
+
+export default function PopupFail({ isOpen, onClose }) {
   return (
     <PopupInfo
       popupType="fail"
-      popupInfoImage="../../images/popupInfoImage_fail.png"
-      popupInfoTitle="Что-то пошло не так! Попробуйте ещё раз.!"
+      popupInfoImage={infoImage}
+      popupInfoTitle="Что-то пошло не&nbsp;так! Попробуйте ещё раз!"
+      isOpen={isOpen}
+      onClose={onClose}
     />
   );
 }

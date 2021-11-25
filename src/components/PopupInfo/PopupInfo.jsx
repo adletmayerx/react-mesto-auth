@@ -13,7 +13,7 @@ export default function PopupInfo({
         isOpen && "popup_opened"
       }`}
     >
-      <div className="popup__container">
+      <div className="popup__container popup-info__container">
         <button
           type="button"
           className="popup__close-button button"
