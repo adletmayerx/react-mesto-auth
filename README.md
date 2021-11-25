@@ -4,4 +4,4 @@
 
 В проекте использованы все мои знания в HTML, СSS, JS и React. Проект выполнен с помощью CRA.
 
-Проект доступен на gh-pages. Cсылка: <https://asadrtdinov.github.io/mesto-react>
+Проект доступен на gh-pages. Cсылка: <https://asadrtdinov.github.io/react-mesto-auth>
