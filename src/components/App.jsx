@@ -70,7 +70,7 @@ function App() {
         .checkToken(localStorage.getItem("jwt"))
         .then(() => {
           setLoggedIn(true);
-          navigate("/");
+          navigate("/react-mesto-auth");
         })
         .catch((err) => {
           console.log(err);
@@ -207,10 +207,11 @@ function App() {
   };
 
   const handleSignOut = () => {
+    debugger;
     setLoggedIn(false);
     localStorage.removeItem("jwt");
     setCurrentUserEmail("");
-    navigate("sign-in");
+    navigate("/react-mesto-auth");
   };
 
   const handleSignIn = (email, password) => {
@@ -219,7 +220,7 @@ function App() {
       .then((res) => {
         setLoggedIn(true);
         setCurrentUserEmail(email);
-        navigate("/");
+        navigate("/react-mesto-auth");
         localStorage.setItem("jwt", res.token);
       })
       .catch((err) => {
@@ -235,7 +236,7 @@ function App() {
         if (res.statusCode !== 400) {
           setIsSuccessPopupOpen(true);
 
-          navigate("/sign-in");
+          navigate("/react-mesto-auth/sign-in");
         }
       })
       .catch((err) => {
@@ -258,19 +259,19 @@ function App() {
       <Routes>
         <Route
           exact
-          path="/sign-in"
+          path="/react-mesto-auth/sign-in"
           element={<Login handleSignIn={handleSignIn} />}
         ></Route>
 
         <Route
           exact
-          path="/sign-up"
+          path="/react-mesto-auth/sign-up"
           element={<Register handleSignUp={handleSignUp} />}
         ></Route>
 
         <Route
           exact
-          path="/"
+          path="/react-mesto-auth"
           element={
             <ProtectedRoute
               loggedIn={loggedIn}

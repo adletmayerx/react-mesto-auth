@@ -5,7 +5,7 @@ export default function HeaderInfo({ headerEmail, signOut }) {
   return (
     <div className="header__info">
       <p className="header__email">{headerEmail}</p>
-      <Link to="/sign-in" className="header__link link" onClick={signOut}>
+      <Link to="/react-mesto-auth/sign-in" className="header__link link" onClick={signOut}>
         Выйти
       </Link>
     </div>

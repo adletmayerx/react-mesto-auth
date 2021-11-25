@@ -10,9 +10,9 @@ export default function Header({ headerEmail, signOut, loggedIn }) {
     <header className="header">
       <img src={logo} alt="лого сайта 'Место'" className="header__logo" />
       <Routes>
-        {loggedIn && <Route exact path="/" element={<HeaderInfo headerEmail={headerEmail} signOut={signOut} />} />}
-        <Route exact path="/sign-up" element={<SignIn />} />
-        <Route exact path="/sign-in" element={<SignUp />} />
+        {loggedIn && <Route exact path="/react-mesto-auth" element={<HeaderInfo headerEmail={headerEmail} signOut={signOut} />} />}
+        <Route exact path="react-mesto-auth/sign-up" element={<SignIn />} />
+        <Route exact path="react-mesto-auth/sign-in" element={<SignUp />} />
       </Routes>
     </header>
   );
