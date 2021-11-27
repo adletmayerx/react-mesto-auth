@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PopupWithForm from "../PopupWithForm/PopupWithForm";
+import FormValidator from "../../utils/FormValidator.js";
+import { selectors, addPlaceFormSelector } from "../../utils/selectors.js";
 
 export default function PopupAddPlace({ isOpen, onClose, onAddPlace, buttonText }) {
   const [title, setTitle] = useState('');
@@ -18,6 +20,22 @@ export default function PopupAddPlace({ isOpen, onClose, onAddPlace, buttonText 
     setTitle('');
     setLink('');
 }, [isOpen]);
+
+useEffect(() => {
+  const addPlaceFormValidator = new FormValidator(
+    selectors,
+    addPlaceFormSelector
+  );
+  const handleAddPlaceValidation = () => {
+    addPlaceFormValidator.enableValidation();
+  };
+
+  window.addEventListener("load", handleAddPlaceValidation);
+
+  return () => {
+    window.removeEventListener("load", handleAddPlaceValidation);
+  };
+}, []);
   
   return (
     <PopupWithForm

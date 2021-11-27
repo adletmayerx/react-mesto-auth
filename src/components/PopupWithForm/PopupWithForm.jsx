@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 export default function PopupWithForm({
   title,
@@ -9,6 +9,12 @@ export default function PopupWithForm({
   children,
   onSubmit,
 }) {
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    formRef.current.reset();
+  }, [isOpen]);
+
   return (
     <div
       className={`popup popup_type_${name} ${isOpen && "popup_opened"}`}
@@ -17,7 +23,13 @@ export default function PopupWithForm({
       <div className="popup__container">
         <button type="button" className="popup__close-button button"></button>
         <h2 className="popup__title">{title}</h2>
-        <form name={name} className="form" onSubmit={onSubmit}>
+        <form
+          ref={formRef}
+          name={name}
+          className="form"
+          onSubmit={onSubmit}
+          noValidate
+        >
           {children}
           <button
             type="submit"

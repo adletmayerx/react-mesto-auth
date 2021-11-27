@@ -1,22 +1,45 @@
 import React, { useContext, useState, useEffect } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import PopupWithForm from "../PopupWithForm/PopupWithForm";
+import FormValidator from "../../utils/FormValidator.js";
+import { selectors, editProfileFormSelector } from "../../utils/selectors.js";
 
-export default function PopupEditProfile({ isOpen, onClose, onUpdateUser, buttonText }) {
+export default function PopupEditProfile({
+  isOpen,
+  onClose,
+  onUpdateUser,
+  buttonText,
+}) {
   const currentUser = useContext(CurrentUserContext);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     onUpdateUser({ name, about: description });
-  }
+  };
+
+  useEffect(() => {
+    const editProfileFormValidator = new FormValidator(
+      selectors,
+      editProfileFormSelector
+    );
+    const handleEditProfileValidation = () => {
+      editProfileFormValidator.enableValidation();
+    };
+
+    window.addEventListener("load", handleEditProfileValidation);
+
+    return () => {
+      window.removeEventListener("load", handleEditProfileValidation);
+    };
+  }, []);
 
   useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
-  }, [currentUser, isOpen]); 
+  }, [currentUser, isOpen]);
 
   return (
     <PopupWithForm
@@ -37,7 +60,7 @@ export default function PopupEditProfile({ isOpen, onClose, onUpdateUser, button
         maxLength="40"
         placeholder="Ваше имя"
         value={name}
-        onChange={e => setName(e.target.value)}
+        onChange={(e) => setName(e.target.value)}
       />
       <span className="form__input-error name-input-error"></span>
       <input
@@ -50,7 +73,7 @@ export default function PopupEditProfile({ isOpen, onClose, onUpdateUser, button
         maxLength="200"
         placeholder="Расскажите о себе"
         value={description}
-        onChange={e => setDescription(e.target.value)}
+        onChange={(e) => setDescription(e.target.value)}
       />
       <span className="form__input-error about-input-error"></span>
     </PopupWithForm>

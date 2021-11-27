@@ -16,6 +16,7 @@ import PopupSuccess from "./PopupSuccess/PopupSuccess";
 import PopupFail from "./PopupFail/PopupFail";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import * as auth from "../utils/auth.js";
+import { createBrowserHistory } from "history";
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -35,6 +36,8 @@ function App() {
   const [buttonDeleteText, setButtonDeleteText] = useState("Да");
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState("");
+  const history = createBrowserHistory();
+  const [currentPath, setCurrentPath] = useState(history.location.pathname);
 
   const navigate = useNavigate();
 
@@ -264,12 +267,16 @@ function App() {
         closeAllPopups();
       }
     };
-
     document.addEventListener("keydown", handleEscClick);
     return () => {
       document.removeEventListener("keydown", handleEscClick);
     };
   }, []);
+
+  useEffect(() => {
+    const { pathname } = history.location;
+    setCurrentPath(pathname);
+  }, [history.location]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -283,13 +290,17 @@ function App() {
         <Route
           exact
           path="/react-mesto-auth/sign-in"
-          element={<Login handleSignIn={handleSignIn} />}
+          element={
+            <Login handleSignIn={handleSignIn} currentPath={currentPath} />
+          }
         ></Route>
 
         <Route
           exact
           path="/react-mesto-auth/sign-up"
-          element={<Register handleSignUp={handleSignUp} />}
+          element={
+            <Register handleSignUp={handleSignUp} currentPath={currentPath} />
+          }
         ></Route>
 
         <Route
